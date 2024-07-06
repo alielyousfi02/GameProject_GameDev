@@ -13,32 +13,31 @@ namespace GameProject_GameDev.Button
 {
     internal class Button : IGameObject
     {
-        private int width;
-        private int height;
-        public Color color;
-        public Vector2 position;
-        public Rectangle button;
+        private int width = 100;
+        private int height = 30;
+        private Color btncolor;
+        private Vector2 position;
+        protected Rectangle button;
+        protected MouseState previousMouseState;
 
         private string text;
-        private Texture2D texture;
+        protected Texture2D texture;
         SpriteFont font;
-        private bool isClicked = false;
-        private bool isHovered = false;
 
-        public Button(int width, int height, Vector2 position, Texture2D texture, Color color, SpriteFont font, string text)
+
+        public Button(Vector2 position, Texture2D texture, Color color, SpriteFont font, string text)
         {
-            this.width = width;
-            this.height = height;
+            
             this.position = position;
             button = new Rectangle((int)position.X, (int)position.Y, width, height);
             this.texture = texture;
             this.font = font;
             this.text = text;
-
+            btncolor = color;
         }
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, button, Color.White);
+            spritebatch.Draw(texture, button, btncolor);
             Vector2 textSize = font.MeasureString(text);
             Vector2 textPos = new Vector2(
                 button.X + (button.Width - textSize.X) / 2,
@@ -48,12 +47,23 @@ namespace GameProject_GameDev.Button
         }
         public void Update(GameTime gameTime)
         {
-            MouseState mouseState = Mouse.GetState();
-            Point mousePosition = new Point(mouseState.X, mouseState.Y);
+           
+
+
+            MouseState currentMouseState = Mouse.GetState();
+
+
+            Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
             if (button.Contains(mousePosition))
             {
-                Debug.WriteLine("hover");
+                texture.SetData(new[] { Color.Red });               
             }
+            else
+            {
+                texture.SetData(new[] { Color.White });
+            }
+           // previousMouseState = currentMouseState; 
 
 
         }
