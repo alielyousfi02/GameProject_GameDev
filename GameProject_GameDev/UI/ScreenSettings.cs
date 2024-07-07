@@ -8,7 +8,7 @@ namespace GameProject_GameDev.UI
 {
     public static class ScreenSettings
     {
-        public static int ScreenWidth { get { return 960; } }
-        public static int ScreenHeight { get { return 480; } }
+        public static int ScreenWidth { get { return 1440; } }
+        public static int ScreenHeight { get { return 720; } }
     }
 }
