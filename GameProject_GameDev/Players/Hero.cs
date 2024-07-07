@@ -7,100 +7,63 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct3D9;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Security.Principal;
 
 namespace GameProject_GameDev.Players
 {
-    //https://www.youtube.com/watch?v=l0WS5SvKdY4&t=1103s
-    internal class Hero
+    internal class Hero : ICollisionEntity
     {
-        private Texture2D texture;
-        private Vector2 position = new Vector2(64, 384);
+        private readonly IInputreader inputHandler;
+        private readonly ICollisionHandler collisionHandler;
+        private readonly Interfaces.IDrawable drawable;
+
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get { return velocity; } set { velocity = value; } }
+        public Rectangle Rectangle { get; private set; }
+        public bool HasJumped { get; set; }
+
         private Vector2 velocity;
-        private Rectangle rectangle;
-        private bool hasJumped = false;
 
-        public Vector2 Position
+
+        public Hero(Texture2D texture)
         {
-            get { return position; }
+            inputHandler = new KeyBoardReader();
+            collisionHandler = new TileCollision();
+            drawable = new HeroDrawer(texture, this);
+
+            Position = new Vector2(64, 384);
+            Velocity = Vector2.Zero;
+            Rectangle = new Rectangle((int)Position.X, (int)Position.Y, texture.Width, texture.Height);
+            HasJumped = false;
         }
-
-        public Hero(Texture2D texture) { this.texture = texture; }
-
-       
 
         public void Update(GameTime gameTime)
         {
-            position += velocity;
-            rectangle = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
+            velocity = Velocity;
+            var inputVelocity = inputHandler.ReadInput(gameTime);
+            Position += inputVelocity;
+            Rectangle = new Rectangle((int)Position.X, (int)Position.Y, Rectangle.Width, Rectangle.Height);
 
-            Input(gameTime);
+            if (Velocity.Y < 10)
+            {
+                velocity.Y += 0.4f;
+                Velocity = velocity;
+                //Velocity.Y += 0.4f;
+            }
+                
 
-            if (velocity.Y < 10)
-                velocity.Y += 0.4f; 
+            Position += Velocity;
         }
 
-        private void Input(GameTime gameTime)
+        public void HandleCollision(Rectangle newRectangle, int xOffset, int yOffset)
         {
-            var keyboardState = Keyboard.GetState();
-
-            if (keyboardState.IsKeyDown(Keys.D))
-                velocity.X = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            else if (keyboardState.IsKeyDown(Keys.A))
-                velocity.X = -(float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            else
-                velocity.X = 0f;
-
-            if (keyboardState.IsKeyDown(Keys.Space) && !hasJumped)
-            {
-                velocity.Y = -9f; 
-                hasJumped = true;
-            }
-        }
-
-        public void Collision(Rectangle newRectangle, int xOffset, int yOffset)
-        {
-            if (rectangle.TouchTopOf(newRectangle))
-            {
-                position.Y = newRectangle.Y - rectangle.Height - 2;
-                velocity.Y = 0f;
-                hasJumped = false; // Reset jump
-            }
-
-            if (rectangle.TouchLeftOf(newRectangle))
-            {
-                position.X = newRectangle.X - rectangle.Width - 2;
-            }
-
-            if (rectangle.TouchRightOf(newRectangle))
-            {
-                position.X = newRectangle.X + newRectangle.Width + 2;
-            }
-
-            if (rectangle.TouchBottomOf(newRectangle))
-            {
-                velocity.Y = 1f;
-            }
-
-            if (position.X < 0) position.X = 0;
-            if (position.X > xOffset - rectangle.Width) position.X = xOffset - rectangle.Width;
-            if (position.Y < 0) velocity.Y = 1f;
-            if (position.Y > yOffset - rectangle.Height) position.Y = yOffset - rectangle.Height;
+            collisionHandler.HandleCollision(this, newRectangle, xOffset, yOffset);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, rectangle, Color.White);
-
-            Texture2D rectTexture = new Texture2D(spriteBatch.GraphicsDevice, rectangle.Width, rectangle.Height);
-            Color[] data = new Color[rectangle.Width * rectangle.Height];
-            for (int i = 0; i < data.Length; ++i) data[i] = Color.Red;
-            rectTexture.SetData(data);
-            spriteBatch.Draw(rectTexture, rectangle, Color.White * 0.5f);
+            drawable.Draw(spriteBatch);
         }
-
     }
 }

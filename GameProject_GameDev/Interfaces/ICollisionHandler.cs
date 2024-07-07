@@ -2,14 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameProject_GameDev.Interfaces
 {
-    internal interface IInputreader
+    internal interface ICollisionHandler
     {
-        Vector2 ReadInput(GameTime gameTime);
+        void HandleCollision(ICollisionEntity entity, Rectangle newRectangle, int xOffset, int yOffset);
+
     }
 }
