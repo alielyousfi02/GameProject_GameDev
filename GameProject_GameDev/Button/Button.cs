@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using GameProject_GameDev.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameProject_GameDev.Button
 {
@@ -15,7 +16,6 @@ namespace GameProject_GameDev.Button
     {
         private int width = 100;
         private int height = 30;
-        private Color btncolor;
         private Vector2 position;
         protected Rectangle button;
         protected MouseState previousMouseState;
@@ -24,8 +24,16 @@ namespace GameProject_GameDev.Button
         protected Texture2D texture;
         SpriteFont font;
 
+        public int Width
+        {
+            get { return 100; }
+        }
+        public int Height
+        {
+            get { return 30; }
+        }
 
-        public Button(Vector2 position, Texture2D texture, Color color, SpriteFont font, string text)
+        public Button(Vector2 position, Texture2D texture, SpriteFont font, string text)
         {
             
             this.position = position;
@@ -33,11 +41,11 @@ namespace GameProject_GameDev.Button
             this.texture = texture;
             this.font = font;
             this.text = text;
-            btncolor = color;
+
         }
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, button, btncolor);
+            spritebatch.Draw(texture, button, Color.White);
             Vector2 textSize = font.MeasureString(text);
             Vector2 textPos = new Vector2(
                 button.X + (button.Width - textSize.X) / 2,
@@ -57,7 +65,7 @@ namespace GameProject_GameDev.Button
 
             if (button.Contains(mousePosition))
             {
-                texture.SetData(new[] { Color.Red });               
+                texture.SetData(new[] { Color.LightBlue });               
             }
             else
             {

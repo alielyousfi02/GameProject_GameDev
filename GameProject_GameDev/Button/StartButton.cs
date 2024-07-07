@@ -10,7 +10,7 @@ namespace GameProject_GameDev.Button
 {
     internal class StartButton : Button
     {
-        public StartButton(Vector2 position, Texture2D texture, Color color, SpriteFont font, string text) : base(position, texture, color, font, text)
+        public StartButton(Vector2 position, Texture2D texture, SpriteFont font, string text) : base(position, texture, font, text)
         {
         }
     }
