@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Security.Principal;
 
 namespace GameProject_GameDev.Players
 {
@@ -24,7 +23,10 @@ namespace GameProject_GameDev.Players
         public bool HasJumped { get; set; }
 
         private Vector2 velocity;
+        private KeyboardState previousKeyboardState;
 
+        private const float gravity = 0.8f; 
+        private const float jumpVelocity = -15f; 
 
         public Hero(Texture2D texture)
         {
@@ -36,29 +38,49 @@ namespace GameProject_GameDev.Players
             Velocity = Vector2.Zero;
             Rectangle = new Rectangle((int)Position.X, (int)Position.Y, texture.Width, texture.Height);
             HasJumped = false;
+            previousKeyboardState = Keyboard.GetState();
         }
 
         public void Update(GameTime gameTime)
         {
             velocity = Velocity;
+
             var inputVelocity = inputHandler.ReadInput(gameTime);
-            Position += inputVelocity;
+            Position += new Vector2(inputVelocity.X, 0);
             Rectangle = new Rectangle((int)Position.X, (int)Position.Y, Rectangle.Width, Rectangle.Height);
 
+            Jump();
+
+
+            Position += new Vector2(0, Velocity.Y);
+            Rectangle = new Rectangle((int)Position.X, (int)Position.Y, Rectangle.Width, Rectangle.Height);
+        }
+
+        private void Jump()
+        {
+            var currentKeyboardState = Keyboard.GetState();
+            if (currentKeyboardState.IsKeyDown(Keys.Up) && previousKeyboardState.IsKeyUp(Keys.Up) && !HasJumped)
+            {
+                Velocity = new Vector2(Velocity.X, jumpVelocity);
+                HasJumped = true;
+            }
+            previousKeyboardState = currentKeyboardState;
+
+            // Apply gravity
             if (Velocity.Y < 10)
             {
-                velocity.Y += 0.4f;
+                velocity.Y += gravity;
                 Velocity = velocity;
-                //Velocity.Y += 0.4f;
             }
-                
-
-            Position += Velocity;
         }
 
         public void HandleCollision(Rectangle newRectangle, int xOffset, int yOffset)
         {
             collisionHandler.HandleCollision(this, newRectangle, xOffset, yOffset);
+            if (Rectangle.TouchTopOf(newRectangle))
+            {
+                HasJumped = false; 
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
