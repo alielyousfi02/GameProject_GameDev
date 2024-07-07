@@ -8,32 +8,21 @@ namespace GameProject_GameDev.Input
 {
     internal class KeyBoardReader : IInputreader
     {
-        public Vector2 ReadInput()
+        public Vector2 ReadInput(GameTime gameTime)
         {
-            var direction = Vector2.Zero;
-            KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Left))
-            {
-                direction.X -= 1;
-                Debug.WriteLine("Left key pressed");
-            }
-            if (state.IsKeyDown(Keys.Right))
-            {
-                direction.X += 1;
-                Debug.WriteLine("Right key pressed");
-            }
-            if (state.IsKeyDown(Keys.Up))
-            {
-                direction.Y -= 1;
-                Debug.WriteLine("Up key pressed");
-            }
-            if (state.IsKeyDown(Keys.Down))
-            {
-                direction.Y += 1;
-                Debug.WriteLine("Down key pressed");
-            }
+            var velocity = Vector2.Zero;
+            var keyboardState = Keyboard.GetState();
 
-            return direction;
+            if (keyboardState.IsKeyDown(Keys.D))
+                velocity.X = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
+            else if (keyboardState.IsKeyDown(Keys.A))
+                velocity.X = -(float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
+
+            if (keyboardState.IsKeyDown(Keys.Space))
+                velocity.Y = -9f;
+
+            return velocity;
+
         }
     }
 }
