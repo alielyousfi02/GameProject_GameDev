@@ -53,7 +53,7 @@ namespace GameProject_GameDev.Players
 
         public void Load(ContentManager content)
         {
-            nonTransparentBoundingBox = GetNonTransparentBoundingBox(texture);
+            nonTransparentBoundingBox = SpriteRectangleBorder.GetNonTransparentBoundingBox(texture);
             rectangle = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
         }
 
