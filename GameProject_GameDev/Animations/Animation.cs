@@ -1,8 +1,6 @@
-﻿using GameProject_GameDev.Players;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace GameProject_GameDev.Animations
 {
@@ -17,6 +15,8 @@ namespace GameProject_GameDev.Animations
 
         public Animation(Texture2D texture, int widthSprite, int heightSprite)
         {
+            
+            
             spritetexture = texture;
             frames = new List<AnimationFrame>();
             int numberOfRows = texture.Height / heightSprite;
@@ -24,12 +24,7 @@ namespace GameProject_GameDev.Animations
 
             if (frames.Count > 0)
             {
-                CurrentFrame = frames[0]; // Initialize the CurrentFrame
-                Debug.WriteLine($"Animation initialized with {frames.Count} frames.");
-            }
-            else
-            {
-                Debug.WriteLine("Error: No frames were created for the animation.");
+                CurrentFrame = frames[0]; 
             }
         }
 
@@ -51,9 +46,8 @@ namespace GameProject_GameDev.Animations
             {
                 for (int col = 0; col < columns; col++)
                 {
-                    Rectangle rec = new Rectangle(col * width, row * height, width, height);
-                    frames.Add(new AnimationFrame(spritetexture, new Rectangle(col * width, row * height, width, height)));
-                    Debug.WriteLine($"Frame added: Row {row}, Column {col}, SourceRectangle: {frames[frames.Count - 1].SourceRectangle}");
+                    Rectangle sourceRectangle = new Rectangle(col * width, row * height, width, height);
+                    frames.Add(new AnimationFrame(spritetexture, sourceRectangle));
                 }
             }
 
