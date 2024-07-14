@@ -21,22 +21,36 @@ namespace GameProject_GameDev.Players.AntiHero
         private Rectangle rectangle;
         private Rectangle nonTransparentRectangle;
         private Vector2 position;
+
+        public Rectangle HitBox
+        {
+            get { return nonTransparentRectangle; }
+        }
+        public bool Alive
+        {
+            get; private set;
+        }
         public StandingEnemy(Texture2D texture, Vector2 position)
         {
             this.texture = texture;
-            this.rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+            this.rectangle = new Rectangle((int)position.X,(int) position.Y, texture.Width, texture.Height);
             this.nonTransparentRectangle = SpriteRectangleBorder.GetNonTransparentBoundingBox(texture, rectangle);
             this.position = position;
+            Alive = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-          
+            spriteBatch.Draw(texture, rectangle, Color.White);
+            
         }
-
+        public void Die()
+        {
+            Alive = false;
+        }
         public void Update(GameTime time)
         {
-            throw new NotImplementedException();
+
         }
     }
 }
