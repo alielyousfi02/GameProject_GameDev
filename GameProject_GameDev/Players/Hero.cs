@@ -8,115 +8,103 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace GameProject_GameDev.Players
 {
     internal class Hero
     {
-        private Texture2D texture;
         private Vector2 position;
         private Vector2 velocity;
         private Rectangle rectangle;
-        private Rectangle nonTransparentBoundingBox;
-        private bool hasJumped;
-
-        private float jumpVelocity = -9f;
-        private float gravity = 0.4f;
+        private Animation currentAnimation;
+        private bool isAttacking;
+        //private bool jumpButtonPressed;
+        private bool hasLanded;
+        private Dictionary<string, Animation> animations;
+        private bool facingRight = true;
 
         private readonly IInputreader inputReader;
-
+        public Rectangle HitBox
+        {
+            get { return GetAdjustedRectangle(); }
+        }
         public Vector2 Position
         {
             get { return position; }
             set { position = value; }
         }
-        public Vector2 Velocity 
+        public Vector2 Velocity
         {
-            get { return velocity; } 
-            set { velocity = value; } 
+            get { return velocity; }
+            set { velocity = value; }
         }
-        public bool HasJumped
-        {
-            get { return hasJumped; }
-            set { hasJumped = value; }
-        }
+      
 
-        public Hero(Texture2D texture, Vector2 startPosition)
+        public Hero(Vector2 startPosition)
         {
-            this.texture = texture;
             this.position = startPosition;
             this.velocity = Vector2.Zero;
-            this.hasJumped = false;
-            this.inputReader = new KeyBoardReader(); 
+            this.isAttacking = false;
+            this.hasLanded = true;
+            this.inputReader = new KeyBoardReader();
+            animations = new Dictionary<string, Animation>();
         }
 
         public void Load(ContentManager content)
         {
-            nonTransparentBoundingBox = SpriteRectangleBorder.GetNonTransparentBoundingBox(texture);
-            rectangle = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
+            animations.Add("Idle", new Animation(content.Load<Texture2D>("Hero/Idle"), 96, 96));
+            animations.Add("Attack", new Animation(content.Load<Texture2D>("Hero/Attack_3"), 96, 96));
+            animations.Add("Run", new Animation(content.Load<Texture2D>("Hero/Run"), 96, 96));
+
+            currentAnimation = animations["Idle"];
+            Texture2D idleTexture = content.Load<Texture2D>("Hero/Idle");
+            rectangle = new Rectangle((int)position.X, (int)position.Y, 96, 96);
         }
 
-        private Rectangle GetNonTransparentBoundingBox(Texture2D texture)
-        {
-            Color[] textureData = new Color[texture.Width * texture.Height];
-            texture.GetData(textureData);
-
-            int left = texture.Width;
-            int right = 0;
-            int top = texture.Height;
-            int bottom = 0;
-
-            for (int y = 0; y < texture.Height; y++)
-            {
-                for (int x = 0; x < texture.Width; x++)
-                {
-                    Color pixel = textureData[y * texture.Width + x];
-                    if (pixel.A != 0)
-                    {
-                        left = Math.Min(left, x);
-                        right = Math.Max(right, x);
-                        top = Math.Min(top, y);
-                        bottom = Math.Max(bottom, y);
-                    }
-                }
-            }
-
-            if (left > right || top > bottom)
-            {
-                return new Rectangle(0, 0, 0, 0);
-            }
-
-            return new Rectangle(left, top, right - left + 1, bottom - top + 1);
-        }
-
-       
         private void HandleInput(GameTime gameTime)
         {
             Vector2 input = inputReader.ReadInput(gameTime);
             velocity.X = input.X;
 
-            if (input.Y < 0 && !hasJumped)
+            if (input.X > 0)
             {
-                Jump();
+                facingRight = true;
+            }
+            else if (input.X < 0)
+            {
+                facingRight = false;
+            }
+
+            if (input.Y < 0)
+            {
+                if (hasLanded)
+                {
+                    Jump();
+                    hasLanded = false; 
+                }
+            }
+            
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                Attack();
             }
         }
 
         private void Jump()
         {
-            velocity.Y = jumpVelocity;
-            hasJumped = true;
+            velocity.Y = -9f;
+        
         }
 
-        private void ApplyGravity()
+        private void Attack()
         {
-            if (hasJumped || position.Y < ScreenSettings.ScreenHeight - rectangle.Height)
+            if (!isAttacking)
             {
-                velocity.Y += gravity;
-                if (velocity.Y > 10)
-                {
-                    velocity.Y = 10;
-                }
+                isAttacking = true;
+                currentAnimation = animations["Attack"];
             }
         }
 
@@ -130,15 +118,14 @@ namespace GameProject_GameDev.Players
 
                 if (intersection.Width < intersection.Height)
                 {
+                    // Horizontale collisie checkere
                     if (adjustedRectangle.Center.X < newRectangle.Center.X)
                     {
-                        position.X = newRectangle.Left - nonTransparentBoundingBox.Width - nonTransparentBoundingBox.X;
-                        Debug.WriteLine("left");
+                        position.X = newRectangle.Left - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Width - currentAnimation.CurrentFrame.NonTransparentBoundingBox.X;
                     }
                     else
                     {
-                        position.X = newRectangle.Right - nonTransparentBoundingBox.X;
-                        Debug.WriteLine("right");
+                        position.X = newRectangle.Right - currentAnimation.CurrentFrame.NonTransparentBoundingBox.X;
                     }
                     velocity.X = 0f;
                 }
@@ -146,69 +133,93 @@ namespace GameProject_GameDev.Players
                 {
                     if (adjustedRectangle.Center.Y < newRectangle.Center.Y && velocity.Y > 0)
                     {
-                        position.Y = newRectangle.Top - nonTransparentBoundingBox.Height - nonTransparentBoundingBox.Y;
+                        position.Y = newRectangle.Top - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Height - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Y;
+
                         velocity.Y = 0f;
-                        hasJumped = false;
-                        Debug.WriteLine("top");
+                        hasLanded = true; 
+                        if (!isAttacking && velocity.X == 0)
+                        {
+                            currentAnimation = animations["Idle"];
+                        }
                     }
                     else if (adjustedRectangle.Center.Y > newRectangle.Center.Y && velocity.Y < 0)
                     {
-                        position.Y = newRectangle.Bottom - nonTransparentBoundingBox.Y;
+                        position.Y = newRectangle.Bottom - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Y;
                         velocity.Y = 0f;
-                        Debug.WriteLine("bottom");
                     }
                 }
             }
 
-            EnsureWithInterval(xOffset, yOffset);
+            EnsureWithinBounds(xOffset, yOffset);
         }
 
         private Rectangle GetAdjustedRectangle()
         {
             return new Rectangle(
-                (int)position.X + nonTransparentBoundingBox.X,
-                (int)position.Y + nonTransparentBoundingBox.Y,
-                nonTransparentBoundingBox.Width,
-                nonTransparentBoundingBox.Height
+                (int)position.X + currentAnimation.CurrentFrame.NonTransparentBoundingBox.X + 1,
+                (int)position.Y + currentAnimation.CurrentFrame.NonTransparentBoundingBox.Y + 1,
+                currentAnimation.CurrentFrame.NonTransparentBoundingBox.Width,
+                currentAnimation.CurrentFrame.NonTransparentBoundingBox.Height
             );
         }
 
-        private void EnsureWithInterval(int xOffset, int yOffset)
+        private void EnsureWithinBounds(int xOffset, int yOffset)
         {
             if (position.X < 0) position.X = 0;
-            if (position.X > xOffset - nonTransparentBoundingBox.Width) position.X = xOffset - nonTransparentBoundingBox.Width;
+            if (position.X > xOffset - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Width) position.X = xOffset - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Width;
             if (position.Y < 0) velocity.Y = 1f;
-            if (position.Y > yOffset - nonTransparentBoundingBox.Height) position.Y = yOffset - nonTransparentBoundingBox.Height;
+            if (position.Y > yOffset - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Height) position.Y = yOffset - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Height;
         }
-
-
-
 
         public void Update(GameTime gameTime)
         {
             HandleInput(gameTime);
 
-            ApplyGravity();
-
+    
+            if (velocity.Y < 10)
+            {
+                velocity.Y += 0.4f;
+            }
             position += velocity;
 
-            //if (Math.Abs(velocity.X) < 0.01f) velocity.X = 0f;
-            //if (Math.Abs(velocity.Y) < 0.01f) velocity.Y = 0f;
+            if (!isAttacking)
+            {
+                if (velocity.X != 0)
+                {
+                    currentAnimation = animations["Run"];
+                }
+                else
+                {
+                    currentAnimation = animations["Idle"];
+                }
+            }
 
-            rectangle = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
+            currentAnimation.Update(gameTime);
+
+            rectangle = new Rectangle((int)position.X, (int)position.Y, currentAnimation.CurrentFrame.SourceRectangle.Width, currentAnimation.CurrentFrame.SourceRectangle.Height);
+
+            if (isAttacking && currentAnimation == animations["Attack"])
+            {
+                if (currentAnimation.CurrentFrame == animations["Attack"].frames[animations["Attack"].frames.Count - 1])
+                {
+                    isAttacking = false;
+                    if (velocity.X != 0)
+                    {
+                        currentAnimation = animations["Run"];
+                    }
+                    else
+                    {
+                        currentAnimation = animations["Idle"];
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D redTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            redTexture.SetData(new[] { Color.Red });
+            SpriteEffects spriteEffects = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Rectangle adjustedRectangle = GetAdjustedRectangle();
-
-            // Uncomment the following line for debugging purposes
-            // spriteBatch.Draw(redTexture, adjustedRectangle, Color.White);
-
-            spriteBatch.Draw(texture, rectangle, Color.White);
+            spriteBatch.Draw(currentAnimation.CurrentFrame.Texture, position, currentAnimation.CurrentFrame.SourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
         }
     }
 }
