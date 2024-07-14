@@ -1,30 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameProject_GameDev.Players
 {
     public static class SpriteRectangleBorder
     {
-        public static Rectangle GetNonTransparentBoundingBox(Texture2D texture)
+        public static Rectangle GetNonTransparentBoundingBox(Texture2D texture, Rectangle sourceRectangle)
         {
-            Color[] textureData = new Color[texture.Width * texture.Height];
-            texture.GetData(textureData);
+            Color[] textureData = new Color[sourceRectangle.Width * sourceRectangle.Height];
+            texture.GetData(0, sourceRectangle, textureData, 0, textureData.Length);
 
-            int left = texture.Width;
+            int left = sourceRectangle.Width;
             int right = 0;
-            int top = texture.Height;
+            int top = sourceRectangle.Height;
             int bottom = 0;
 
-            for (int y = 0; y < texture.Height; y++)
+            for (int y = 0; y < sourceRectangle.Height; y++)
             {
-                for (int x = 0; x < texture.Width; x++)
+                for (int x = 0; x < sourceRectangle.Width; x++)
                 {
-                    Color pixel = textureData[y * texture.Width + x];
+                    Color pixel = textureData[y * sourceRectangle.Width + x];
                     if (pixel.A != 0)
                     {
                         left = Math.Min(left, x);
@@ -43,5 +39,4 @@ namespace GameProject_GameDev.Players
             return new Rectangle(left, top, right - left + 1, bottom - top + 1);
         }
     }
-
 }
