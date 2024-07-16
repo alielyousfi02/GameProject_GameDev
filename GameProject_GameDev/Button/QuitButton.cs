@@ -1,33 +1,39 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameProject_GameDev.Button
+namespace GameProject_GameDev.Button    
 {
     internal class QuitButton : Button
     {
         
-        public QuitButton(Vector2 position, Texture2D texture, SpriteFont font, string text) : base(position, texture, font, text)
+        public QuitButton(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, Vector2 position, string text) : base(game,graphicsDevice,content, position, text)
         {
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            
             MouseState currentMouseState = Mouse.GetState();
             Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-
-            if (button.Contains(mousePosition) && currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
+            
+            if (button.Contains(mousePosition) && currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed)
             {
-                System.Environment.Exit(0);
-            }
 
-            previousMouseState = currentMouseState;  
+                game.Exit();
+                Environment.Exit(0);
+            }              
+            
+
+            previousMouseState = currentMouseState;
+            base.Update(gameTime);
 
         }
     }

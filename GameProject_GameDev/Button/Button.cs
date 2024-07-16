@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using GameProject_GameDev.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Xna.Framework.Content;
 
 namespace GameProject_GameDev.Button
 {
@@ -19,6 +20,9 @@ namespace GameProject_GameDev.Button
         private Vector2 position;
         protected Rectangle button;
         protected MouseState previousMouseState;
+        protected Game1 game;
+        protected GraphicsDevice graphicsDevice;
+        protected ContentManager content;
 
         private string text;
         protected Texture2D texture;
@@ -32,18 +36,32 @@ namespace GameProject_GameDev.Button
         {
             get { return 30; }
         }
-
-        public Button(Vector2 position, Texture2D texture, SpriteFont font, string text)
+      
+        public void ChangeX(int x)
         {
-            
-            this.position = position;
+            position.X = x;
+        }
+        public void ChangeY(int x)
+        {
+            position.X = x;
+        }
+        public Button(Game1 game, GraphicsDevice graphicsDevice, ContentManager content,  Vector2 position, string text)
+        {
+
+            this.game = game;
+            this.graphicsDevice = graphicsDevice;
+            this.content = content;
+            //this.position = position;
             button = new Rectangle((int)position.X, (int)position.Y, width, height);
-            this.texture = texture;
-            this.font = font;
-            this.text = text;
+
+            this.texture = new Texture2D(graphicsDevice, 1, 1);
+            this.texture.SetData(new[] { Color.White });
+
+            this.font = content.Load<SpriteFont>("Text");
+            this.text = text; 
 
         }
-        public void Draw(SpriteBatch spritebatch)
+        public virtual void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(texture, button, Color.White);
             Vector2 textSize = font.MeasureString(text);
@@ -53,9 +71,9 @@ namespace GameProject_GameDev.Button
 
             spritebatch.DrawString(font, text, textPos, Color.Black);
         }
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
-           
+
 
 
             MouseState currentMouseState = Mouse.GetState();
@@ -65,13 +83,14 @@ namespace GameProject_GameDev.Button
 
             if (button.Contains(mousePosition))
             {
+
                 texture.SetData(new[] { Color.LightBlue });               
             }
             else
             {
                 texture.SetData(new[] { Color.White });
             }
-           // previousMouseState = currentMouseState; 
+            previousMouseState = currentMouseState; 
 
 
         }
