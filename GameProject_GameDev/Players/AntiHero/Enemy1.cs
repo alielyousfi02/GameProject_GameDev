@@ -11,9 +11,11 @@ namespace GameProject_GameDev.Players.AntiHero
 {
     internal class Enemy1 : WalkingEnemy
     {
-        public Enemy1(Texture2D texture, Rectangle rectangle) : base(texture, rectangle)
+        public Enemy1(Texture2D texture, Vector2 position, float distancetotravel) : base(texture, position ,distancetotravel)
         {
-
+            base.frameWidth = texture.Width / 6;
+            base.frameHeigth = texture.Height;
+            
         }
 
         public void Update(GameTime time)
@@ -26,7 +28,7 @@ namespace GameProject_GameDev.Players.AntiHero
         {
 
             base.Draw(spriteBatch);
-               
+
         }
     }
 }
