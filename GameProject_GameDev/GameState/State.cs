@@ -15,6 +15,7 @@ namespace GameProject_GameDev.GameState
         protected ContentManager content;
         protected GraphicsDevice graphicsDevice;
         protected Game1 game;
+        internal List<Button.Button> buttons;
         public abstract void LoadContent();
 
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
@@ -26,7 +27,7 @@ namespace GameProject_GameDev.GameState
             this.game = game;
 
             this.graphicsDevice = graphicsDevice;
-
+            buttons = new List<Button.Button>();
             this.content = content;
         }
         public abstract void Update(GameTime gameTime);

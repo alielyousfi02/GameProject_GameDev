@@ -1,6 +1,7 @@
 ﻿using GameProject_GameDev.Levels;
 using GameProject_GameDev.Levels.LevelBuilder;
 using GameProject_GameDev.Players;
+using GameProject_GameDev.Players.AntiHero;
 using GameProject_GameDev.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -20,11 +21,12 @@ namespace GameProject_GameDev.GameState
         private Level1 level1;
         private Level curLevel;
         Hero hero;
-        public LevelState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) :  base(game, graphicsDevice, content)
+        public LevelState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             level1 = new Level1(content);
             curLevel = level1;
-            hero = new Hero(new Vector2(500, 100));
+            hero = new Hero(new Vector2(500, 600));
+            //Debug.WriteLine(curLevel.enemies.Count + " " + curLevel.enemies[0].GetType() + " " + curLevel.enemies[1].GetType());
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -48,6 +50,7 @@ namespace GameProject_GameDev.GameState
 
         public override void Update(GameTime gameTime)
         {
+         
 
             curLevel.Update(gameTime);
             hero.Update(gameTime);
@@ -55,26 +58,35 @@ namespace GameProject_GameDev.GameState
             {
                 hero.ResolveCollisions(item.Rectangle, ScreenSettings.ScreenWidth, ScreenSettings.ScreenHeight);
             }
-            foreach (var item in curLevel.walkingEnemies)
+            foreach (Enemy item in curLevel.enemies)
             {
-                if (hero.HitBox.Intersects(item.HitBox))
+                if (item.IsAlive)
                 {
-                    if(hero.IsAttacking)
-                        item.Die();
-                    else
-                        game.ChangeState(new GameOverState(game, graphicsDevice, content));
+                    if (hero.HitBox.Intersects(item.HitBox) && item.GetType() == typeof(StandingEnemy))
+                    {
+                        if (hero.HitBox.TouchTopOf(item.HitBox))
+                        {
+                            //Debug.WriteLine("kill");
+                            item.Die();
+                        }
+                        else
+                        {
+                            hero.Die();
+                        }
 
-                    
+                    }
+                    if (item is WalkingEnemy && hero.HitBox.Intersects(item.HitBox))
+                    {
+                        //Debug.WriteLine("test");
+                        if (hero.IsAttacking)
+                            item.Die();
+                        else
+                            hero.Die();
+                    }
                 }
-              
             }
-            foreach (var item in curLevel.standingEnemies)
-            {
-                if (hero.HitBox.Intersects(item.HitBox))
-                {
-                    item.Die();
-                }
-            }
+            if (!hero.IsAlive)
+                game.ChangeState(new GameOverState(game, graphicsDevice, content));
 
         }
     }

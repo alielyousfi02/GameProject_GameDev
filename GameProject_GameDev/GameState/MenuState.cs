@@ -22,10 +22,9 @@ namespace GameProject_GameDev.GameState
         private QuitButton quitButton;
 
         private Texture2D backgroundtexture;
-        List<Button.Button> buttons;
+        //List<Button.Button> buttons;
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            buttons = new List<Button.Button>();
              int Xpos = ScreenSettings.ScreenWidth / 2 - 50; // nog aanpassen
              int Ypos = ScreenSettings.ScreenHeight / 2 - 15; // nog aanpassen
             startButton = new StartButton(game, graphicsDevice, content, new Vector2(Xpos, Ypos), "Start");
