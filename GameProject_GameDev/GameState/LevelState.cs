@@ -58,6 +58,15 @@ namespace GameProject_GameDev.GameState
             {
                 hero.ResolveCollisions(item.Rectangle, ScreenSettings.ScreenWidth, ScreenSettings.ScreenHeight);
             }
+            //Collect Star
+            foreach (var item in curLevel.stars)
+            {
+                if (hero.HitBox.Intersects(item.HitBox))
+                {
+                    item.Collect();
+                }
+            }
+            //Attack Hero Enemy
             foreach (Enemy item in curLevel.enemies)
             {
                 if (item.IsAlive)
