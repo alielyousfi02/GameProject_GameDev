@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameProject_GameDev.Animations
 {
@@ -13,10 +14,8 @@ namespace GameProject_GameDev.Animations
         private double secondCounter = 0;
         private Texture2D spritetexture;
 
-        public Animation(Texture2D texture, int widthSprite, int heightSprite)
+        public Animation(Texture2D texture, int widthSprite = 1, int heightSprite = 1)
         {
-            
-            
             spritetexture = texture;
             frames = new List<AnimationFrame>();
             int numberOfRows = texture.Height / heightSprite;
@@ -24,7 +23,7 @@ namespace GameProject_GameDev.Animations
 
             if (frames.Count > 0)
             {
-                CurrentFrame = frames[0]; 
+                CurrentFrame = frames[0];
             }
         }
 
@@ -57,7 +56,7 @@ namespace GameProject_GameDev.Animations
         public void Update(GameTime gameTime)
         {
             if (frames.Count == 0) return; // Prevent out-of-range access
-
+            Debug.WriteLine(frames[counter].SourceRectangle.Width + " " + frames[counter].SourceRectangle.Height + " -> " + frames[counter].NonTransparentBoundingBox.Width + " " + frames[counter].NonTransparentBoundingBox.Height);
             secondCounter += gameTime.ElapsedGameTime.TotalSeconds;
             int fps = 10;
             if (secondCounter >= 1d / fps)
@@ -67,9 +66,20 @@ namespace GameProject_GameDev.Animations
             }
 
             if (counter >= frames.Count)
+            {
                 counter = 0;
+            }
 
             CurrentFrame = frames[counter];
+        }
+
+        public void Reset()
+        {
+            counter = 0;
+            if (frames.Count > 0)
+            {
+                CurrentFrame = frames[0];
+            }
         }
     }
 }

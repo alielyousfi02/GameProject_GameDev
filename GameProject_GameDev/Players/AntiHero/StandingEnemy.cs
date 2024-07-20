@@ -7,50 +7,32 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GameProject_GameDev.Players.AntiHero
 {
-    internal class StandingEnemy : IGameObject
+    internal class StandingEnemy : Enemy
     {
-        //Staat 
-        //Doet niets
-        //Bij collisie links recht Hero dood
-        //Collisie van boven object weg + score
-
-        private Texture2D texture;
-        private Rectangle rectangle;
-        private Rectangle nonTransparentRectangle;
-        private Vector2 position;
-
-        public Rectangle HitBox
+        public StandingEnemy(Texture2D texture, int row, int col, int width, int height)
+            : base(texture, row, col, width, height)
         {
-            get { return nonTransparentRectangle; }
-        }
-        public bool Alive
-        {
-            get; private set;
-        }
-        public StandingEnemy(Texture2D texture, Vector2 position)
-        {
-            this.texture = texture;
-            this.rectangle = new Rectangle((int)position.X,(int) position.Y, texture.Width, texture.Height);
-            this.nonTransparentRectangle = SpriteRectangleBorder.GetNonTransparentBoundingBox(texture, rectangle);
-            this.position = position;
-            Alive = true;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Update(GameTime gameTime)
         {
-            spriteBatch.Draw(texture, rectangle, Color.White);
-            
+            // No movement or other behavior for StandingEnemy
         }
-        public void Die()
-        {
-            Alive = false;
-        }
-        public void Update(GameTime time)
-        {
 
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            // Drawing hitbox (optional)
+            Texture2D rectTexture = new Texture2D(spriteBatch.GraphicsDevice, rectangle.Width, rectangle.Height);
+            Color[] data = new Color[rectangle.Width * rectangle.Height];
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.Red;
+            rectTexture.SetData(data);
+            //spriteBatch.Draw(rectTexture, HitBox, Color.White * 0.5f);
         }
     }
 }

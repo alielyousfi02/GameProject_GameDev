@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,7 +21,6 @@ namespace GameProject_GameDev.Players
         private Rectangle rectangle;
         private Animation currentAnimation;
         private bool isAttacking;
-        //private bool jumpButtonPressed;
         private bool hasLanded;
         private Dictionary<string, Animation> animations;
         private bool facingRight = true;
@@ -41,7 +41,20 @@ namespace GameProject_GameDev.Players
             set { velocity = value; }
         }
       
-
+        public bool IsAttacking
+        {
+            get
+            {
+                if (currentAnimation == animations["Attack"])
+                    return true;
+                else 
+                    return false;
+            }
+        }
+        public bool IsAlive
+        {
+            get;private set;
+        }
         public Hero(Vector2 startPosition)
         {
             this.position = startPosition;
@@ -50,6 +63,7 @@ namespace GameProject_GameDev.Players
             this.hasLanded = true;
             this.inputReader = new KeyBoardReader();
             animations = new Dictionary<string, Animation>();
+            IsAlive = true;
         }
 
         public void Load(ContentManager content)
@@ -85,8 +99,8 @@ namespace GameProject_GameDev.Players
                     hasLanded = false; 
                 }
             }
-            
 
+          
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 Attack();
@@ -96,7 +110,8 @@ namespace GameProject_GameDev.Players
         private void Jump()
         {
             velocity.Y = -9f;
-        
+            
+
         }
 
         private void Attack()
@@ -106,6 +121,10 @@ namespace GameProject_GameDev.Players
                 isAttacking = true;
                 currentAnimation = animations["Attack"];
             }
+        }
+        public void Die()
+        {
+            IsAlive = false;
         }
 
         public void ResolveCollisions(Rectangle newRectangle, int xOffset, int yOffset)
@@ -150,7 +169,7 @@ namespace GameProject_GameDev.Players
                 }
             }
 
-            EnsureWithinBounds(xOffset, yOffset);
+            //EnsureWithinBounds(xOffset, yOffset);
         }
 
         private Rectangle GetAdjustedRectangle()
@@ -218,8 +237,17 @@ namespace GameProject_GameDev.Players
         public void Draw(SpriteBatch spriteBatch)
         {
             SpriteEffects spriteEffects = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-
+            if(IsAlive)
             spriteBatch.Draw(currentAnimation.CurrentFrame.Texture, position, currentAnimation.CurrentFrame.SourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            
+            //DEBUG
+            /*
+            Texture2D rectTexture = new Texture2D(spriteBatch.GraphicsDevice, rectangle.Width, rectangle.Height);
+            Color[] data = new Color[rectangle.Width * rectangle.Height];
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.Red;
+            rectTexture.SetData(data);
+            spriteBatch.Draw(rectTexture, HitBox, Color.White * 0.5f);
+            */
         }
     }
 }
