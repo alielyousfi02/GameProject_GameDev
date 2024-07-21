@@ -12,20 +12,37 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GameProject_GameDev.GameState
 {
     internal class LevelState : State
     {
+        private int starCount = 0;
+        private int LevelWon = 0;
+        private int Score = 0;
+
         private Level1 level1;
         private Level curLevel;
+        private Level2 level2;
         Hero hero;
+
+
         public LevelState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            level1 = new Level1(content);
-            curLevel = level1;
             hero = new Hero(new Vector2(500, 600));
+            level1 = new Level1(content, hero);
+            level2 = new Level2(content, hero);
+            curLevel = level1;
+            //curLevel = level2;
+
+            //hero = new Hero(new Vector2(1350, 580));
+            //FollowEnemy follow = new FollowEnemy(content.Load<Texture2D>("star"), 1, 1, 50, 50, 150);
+            //follow.SetHeroPosition(hero.Position);
+            //curLevel.enemies.Add(follow);
+
+            //Debug.WriteLine(curLevel.stars.Count);
             //Debug.WriteLine(curLevel.enemies.Count + " " + curLevel.enemies[0].GetType() + " " + curLevel.enemies[1].GetType());
         }
 
@@ -39,7 +56,7 @@ namespace GameProject_GameDev.GameState
 
         public override void LoadContent()
         {
-            curLevel.LoadContent();
+            curLevel.Load();
             hero.Load(content);
         }
 
@@ -50,8 +67,9 @@ namespace GameProject_GameDev.GameState
 
         public override void Update(GameTime gameTime)
         {
-         
 
+            //game.ChangeState(new GameWonState(game, graphicsDevice, content));
+            //Debug.WriteLine("Score: "+  Score);
             curLevel.Update(gameTime);
             hero.Update(gameTime);
             foreach (CollisionTiles item in curLevel.map.CollisionTiles)
@@ -61,41 +79,52 @@ namespace GameProject_GameDev.GameState
             //Collect Star
             foreach (var item in curLevel.stars)
             {
-                if (hero.HitBox.Intersects(item.HitBox))
+                if (hero.HitBox.Intersects(item.HitBox) && !item.IsCollected)
                 {
                     item.Collect();
+                    starCount+=1;
                 }
             }
             //Attack Hero Enemy
             foreach (Enemy item in curLevel.enemies)
             {
-                if (item.IsAlive)
+                if (item.IsAlive && hero.HitBox.Intersects(item.HitBox))
                 {
-                    if (hero.HitBox.Intersects(item.HitBox) && item.GetType() == typeof(StandingEnemy))
+                    if (hero.HitBox.TouchTopOf(item.HitBox))
                     {
-                        if (hero.HitBox.TouchTopOf(item.HitBox))
-                        {
-                            //Debug.WriteLine("kill");
-                            item.Die();
-                        }
-                        else
-                        {
-                            hero.Die();
-                        }
-
+                        Score += item.Score;
+                        item.Die();
                     }
-                    if (item is WalkingEnemy && hero.HitBox.Intersects(item.HitBox))
+                    else if (hero.IsAttacking)
                     {
-                        //Debug.WriteLine("test");
-                        if (hero.IsAttacking)
-                            item.Die();
-                        else
-                            hero.Die();
+                        Score += item.Score;
+                        item.Die();
+                    }
+                    else
+                    {
+                        hero.Die();
                     }
                 }
             }
+
+            if (starCount == curLevel.stars.Count)
+            {
+                Debug.WriteLine(starCount);
+                if(curLevel == level1)
+                {
+                    curLevel = level2;
+                    starCount = 0;
+                    curLevel.Load();
+                }
+                starCount = 0;
+                LevelWon++;
+            }
             if (!hero.IsAlive)
                 game.ChangeState(new GameOverState(game, graphicsDevice, content));
+            if(LevelWon == 2)
+            {
+                game.ChangeState(new GameWonState(game, graphicsDevice, content, Score));
+            }
 
         }
     }
