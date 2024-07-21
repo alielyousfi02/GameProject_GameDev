@@ -55,8 +55,8 @@ namespace GameProject_GameDev.Animations
 
         public void Update(GameTime gameTime)
         {
-            if (frames.Count == 0) return; // Prevent out-of-range access
-            Debug.WriteLine(frames[counter].SourceRectangle.Width + " " + frames[counter].SourceRectangle.Height + " -> " + frames[counter].NonTransparentBoundingBox.Width + " " + frames[counter].NonTransparentBoundingBox.Height);
+            if (frames.Count == 0) return; 
+            //Debug.WriteLine(frames[counter].SourceRectangle.Width + " " + frames[counter].SourceRectangle.Height + " -> " + frames[counter].NonTransparentBoundingBox.Width + " " + frames[counter].NonTransparentBoundingBox.Height);
             secondCounter += gameTime.ElapsedGameTime.TotalSeconds;
             int fps = 10;
             if (secondCounter >= 1d / fps)
