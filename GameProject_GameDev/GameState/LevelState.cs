@@ -6,14 +6,8 @@ using GameProject_GameDev.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct3D9;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace GameProject_GameDev.GameState
 {
@@ -35,15 +29,6 @@ namespace GameProject_GameDev.GameState
             level1 = new Level1(content, hero);
             level2 = new Level2(content, hero);
             curLevel = level1;
-            //curLevel = level2;
-
-            //hero = new Hero(new Vector2(1350, 580));
-            //FollowEnemy follow = new FollowEnemy(content.Load<Texture2D>("star"), 1, 1, 50, 50, 150);
-            //follow.SetHeroPosition(hero.Position);
-            //curLevel.enemies.Add(follow);
-
-            //Debug.WriteLine(curLevel.stars.Count);
-            //Debug.WriteLine(curLevel.enemies.Count + " " + curLevel.enemies[0].GetType() + " " + curLevel.enemies[1].GetType());
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -106,7 +91,6 @@ namespace GameProject_GameDev.GameState
                     }
                 }
             }
-
             if (starCount == curLevel.stars.Count)
             {
                 Debug.WriteLine(starCount);
