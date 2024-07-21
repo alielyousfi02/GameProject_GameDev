@@ -1,10 +1,12 @@
 ﻿using GameProject_GameDev.Levels.LevelBuilder;
 using GameProject_GameDev.Players;
 using GameProject_GameDev.Players.AntiHero;
+using GameProject_GameDev.StarMap;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct3D9;
+using System;
 using System.Diagnostics;
 
 namespace GameProject_GameDev.Levels
@@ -13,51 +15,72 @@ namespace GameProject_GameDev.Levels
     {
 
         private Hero hero;
-        private Enemy1 enemy1;
-        StandingEnemy standingEnemy;
-        public Level1(ContentManager content) : base(content)
+        public StandingEnemy standingEnemy;
+        public Level1(ContentManager content, Hero hero) : base(content, hero)
         {
-            hero = new Hero( new Vector2(500, 100));
-            standingEnemy = new StandingEnemy(content.Load<Texture2D>("standing"), new Vector2(400, 602));
-            enemy1 = new Enemy1(content.Load<Texture2D>("HERO2"), new Vector2(1146,432),100);
+            Texture2D enemy1, enemy2, enemy3, startexture, ghost;
+
+            
+            enemy1 = content.Load<Texture2D>("enemy_run");
+            enemy2 = content.Load<Texture2D>("enemy_attack");
+            ghost = content.Load<Texture2D>("ghost");
+            enemy3 = content.Load<Texture2D>("standing");
+            startexture = content.Load<Texture2D>("star");
+
+            this.hero = hero;
+            enemies.Add(new GhostEnemy(ghost, 1, 1, 96, 96, 100, hero));
+            enemies.Add(new WalkingEnemy(enemy2, 8, 3, 96, 96, 60));
+            enemies.Add(new WalkingEnemy(enemy1, 12, 7, 48, 48, 150));
+            enemies.Add(new WalkingEnemy(enemy2, 4, 24, 96, 96, 120));
+            enemies.Add(new WalkingEnemy(enemy1, 1, 23, 48, 48, 100));
+            enemies.Add(new StandingEnemy(enemy3, 4, 5, 70, 70));
+
+            stars.Add(new Star(startexture, new Vector2(220, 30)));
+            stars.Add(new Star(startexture, new Vector2(1300, 601)));
+            foreach (var item in enemies)
+            {
+                if (item is WalkingEnemy)
+                    item.Load();
+            }
         }
 
-        public override void LoadContent()
+        public override void Load()
         {
-            base.LoadContent();
+            base.Load();
             CollisionTiles.Content = content;
-            hero.Load(content);
+            //hero.Load(content);
 
             int[,] mapArray = new int[,]
-            {
+               {
                 { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
                 { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-                { 2,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,2 },
-                { 2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,2 },
+                { 2,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,2 },
+                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,2 },
+                { 2,0,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,2 },
+                { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,1,2 },
+                { 2,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,2 },
+                { 2,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,2 },
+                { 2,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,0,1,0,0,0,0,0,2 },
+                { 2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,2 },
+                { 2,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,2 },
+                { 2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2 },
                 { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2 },
                 { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 }
-            };
+                      };
 
             map.Generate(mapArray, 48);
         }
 
         public override void Update(GameTime gameTime)
         {
-            hero.Update(gameTime);
-            enemy1.Update(gameTime);
-            foreach (CollisionTiles item in map.CollisionTiles)
+            //hero.Update(gameTime);
+            //enemy1.Update(gameTime);
+            /*foreach (CollisionTiles item in map.CollisionTiles)
             {
                 hero.ResolveCollisions(item.Rectangle, map.Width, map.Height);
-            }
+            }*/
+            //enemy2.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -65,9 +88,11 @@ namespace GameProject_GameDev.Levels
         {
             base.Draw(spriteBatch);
             map.Draw(spriteBatch);
-            standingEnemy.Draw(spriteBatch);
-            enemy1.Draw(spriteBatch);
-            hero.Draw(spriteBatch);
+            //standingEnemy.Draw(spriteBatch);
+            //if(enemy1.IsAlive)
+            //enemy1.Draw(spriteBatch);
+            //enemy2.Draw(spriteBatch);
+           // hero.Draw(spriteBatch);
         }
     }
 }

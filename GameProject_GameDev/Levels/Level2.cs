@@ -17,18 +17,16 @@ namespace GameProject_GameDev.Levels
     {
 
         private Hero hero;
-        private Enemy1 enemy1;
-        private Enemy2 enemy2;
         public StandingEnemy standingEnemy;
-        public Level2(ContentManager content) : base(content)
+        public Level2(ContentManager content, Hero hero) : base(content, hero)
         {
-            //enemies.Clear();  
-            Texture2D enemy1, enemy2, enemy3, startexture;
+            Texture2D enemy1, enemy2, enemy3, startexture, ghost;
             enemy1 = content.Load<Texture2D>("enemy_run");
             enemy2 = content.Load<Texture2D>("enemy_attack");
             enemy3 = content.Load<Texture2D>("standing");
             startexture = content.Load<Texture2D>("star");
-
+            ghost = content.Load<Texture2D>("ghost");
+            this.hero = hero;
 
             enemies.Add(new WalkingEnemy(enemy1, 8, 15, 48, 48, 160));
 
@@ -38,11 +36,9 @@ namespace GameProject_GameDev.Levels
             enemies.Add(new StandingEnemy(enemy3, 12, 23, 70, 70));
 
 
-            stars.Add(new Star(startexture, new Vector2(220, 30)));
+            stars.Add(new Star(startexture, new Vector2(1200, 90)));
             stars.Add(new Star(startexture, new Vector2(1300, 457)));
 
-            //stars.Add(new Star(startexture, new Vector2(220, 30)));
-            //stars.Add(new Star(startexture, new Vector2(1300, 601)));
             foreach (var item in enemies)
             {
                 if (item is WalkingEnemy)
