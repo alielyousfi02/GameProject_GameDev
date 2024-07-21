@@ -1,8 +1,7 @@
 ﻿using GameProject_GameDev.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Diagnostics;
+
 
 namespace GameProject_GameDev.Input
 {
@@ -10,15 +9,15 @@ namespace GameProject_GameDev.Input
     {
         public Vector2 ReadInput(GameTime gameTime)
         {
-            var velocity = Vector2.Zero;
+            var velocity = Vector2.Zero ;
             var keyboardState = Keyboard.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.D))
+            if (keyboardState.IsKeyDown(Keys.Right))
                 velocity.X = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            else if (keyboardState.IsKeyDown(Keys.A))
+            else if (keyboardState.IsKeyDown(Keys.Left))
                 velocity.X = -(float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
 
-            if (keyboardState.IsKeyDown(Keys.Space))
+            if (keyboardState.IsKeyDown(Keys.Up))
                 velocity.Y = -9f;
 
             return velocity;
