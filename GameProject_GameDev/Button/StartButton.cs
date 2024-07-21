@@ -3,12 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameProject_GameDev.Button
 {
@@ -24,7 +18,7 @@ namespace GameProject_GameDev.Button
 
             MouseState currentMouseState = Mouse.GetState();
             Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-            System.Diagnostics.Debug.WriteLine(mousePosition.X + " " + mousePosition.Y + " " + base.button.X + " " + (base.button.X + base.button.Width) + ":" + base.button.Y + " " + (base.button.Y + base.button.Height));
+            //System.Diagnostics.Debug.WriteLine(mousePosition.X + " " + mousePosition.Y + " " + base.button.X + " " + (base.button.X + base.button.Width) + ":" + base.button.Y + " " + (base.button.Y + base.button.Height));
             if (button.Contains(mousePosition) && currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed)
             {
                 game.ChangeState(new LevelState(game, graphicsDevice, content));

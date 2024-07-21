@@ -1,14 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 using GameProject_GameDev.Interfaces;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.Xna.Framework.Content;
 
 namespace GameProject_GameDev.Button
@@ -30,28 +23,21 @@ namespace GameProject_GameDev.Button
 
         public int Width
         {
-            get { return 100; }
+            get { return 1000; }
         }
         public int Height
         {
-            get { return 30; }
+            get { return 300; }
         }
       
-        public void ChangeX(int x)
-        {
-            position.X = x;
-        }
-        public void ChangeY(int x)
-        {
-            position.X = x;
-        }
+       
+        
         public Button(Game1 game, GraphicsDevice graphicsDevice, ContentManager content,  Vector2 position, string text)
         {
 
             this.game = game;
             this.graphicsDevice = graphicsDevice;
             this.content = content;
-            //this.position = position;
             button = new Rectangle((int)position.X, (int)position.Y, width, height);
 
             this.texture = new Texture2D(graphicsDevice, 1, 1);
