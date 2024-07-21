@@ -30,7 +30,7 @@ namespace GameProject_GameDev.Levels.LevelBuilder
         }
     }
     class CollisionTiles : Tiles
-    {
+    { 
         public CollisionTiles(int i, Rectangle newRectangle)
         {
             texture = Content.Load<Texture2D>("Tile" + i);
