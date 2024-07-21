@@ -14,6 +14,20 @@ namespace GameProject_GameDev.Players.AntiHero
         protected Texture2D texture;
         protected Rectangle rectangle;
         protected Vector2 position;
+        private int score;
+        public  int Score
+        {
+            get
+            {
+                return score;
+            }
+            protected set
+            {
+                score = value;
+            }
+
+        }
+        
         protected int Width
         {
             get;set;
@@ -30,6 +44,10 @@ namespace GameProject_GameDev.Players.AntiHero
             {
                 return rectangle;
             }
+            protected set
+            {
+                rectangle = value;
+            }
         }
 
         protected Enemy(Texture2D texture,int row, int col, int width, int height)
@@ -42,7 +60,7 @@ namespace GameProject_GameDev.Players.AntiHero
         }
 
         public abstract void Update(GameTime gameTime);
-
+        public abstract void Load();
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (IsAlive)

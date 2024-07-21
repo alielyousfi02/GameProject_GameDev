@@ -19,12 +19,12 @@ namespace GameProject_GameDev.Players.AntiHero
         
 
         
-
         public WalkingEnemy(Texture2D texture,int row, int col ,int width, int height, float distanceToTravel,float speed = 2.0f)
             : base(texture, row, col, width, height)
         {
-            //frameWidth = width;
-            //frameHeight = height;
+            base.Score = 500;
+            frameWidth = width;
+            frameHeight = height;
             this.distanceToTravel = distanceToTravel;
             this.speed = speed;
             this.direction = 1;
@@ -32,7 +32,7 @@ namespace GameProject_GameDev.Players.AntiHero
             this.rectangle = new Rectangle((int)position.X, (int)position.Y, width, height);
         }
 
-        public void Load()
+        public override void Load()
         {
             animation = new Animation(texture, frameWidth, frameHeight);
         }
@@ -58,7 +58,7 @@ namespace GameProject_GameDev.Players.AntiHero
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Debug.WriteLine(animation.CurrentFrame.SourceRectangle.Width + " " + animation.CurrentFrame.SourceRectangle.Height + " -> " + animation.CurrentFrame.NonTransparentBoundingBox.Width + " " + animation.CurrentFrame.NonTransparentBoundingBox.Height);
+            //Debug.WriteLine(animation.CurrentFrame.SourceRectangle.Width + " " + animation.CurrentFrame.SourceRectangle.Height + " -> " + animation.CurrentFrame.NonTransparentBoundingBox.Width + " " + animation.CurrentFrame.NonTransparentBoundingBox.Height);
 
             SpriteEffects spriteEffects = direction >= 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             if(IsAlive)
