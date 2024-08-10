@@ -1,5 +1,4 @@
-﻿using GameProject_GameDev.Levels.LevelBuilder;
-using GameProject_GameDev.Players.AntiHero;
+﻿using GameProject_GameDev.Players.AntiHero;
 using GameProject_GameDev.Players;
 using GameProject_GameDev.StarMap;
 using Microsoft.Xna.Framework;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using GameProject_GameDev.LevelBuilder;
 
 namespace GameProject_GameDev.Levels
 {
@@ -20,24 +20,14 @@ namespace GameProject_GameDev.Levels
         public StandingEnemy standingEnemy;
         public Level2(ContentManager content, Hero hero) : base(content, hero)
         {
-            Texture2D enemy1, enemy2, enemy3, startexture, ghost;
-            enemy1 = content.Load<Texture2D>("enemy_run");
-            enemy2 = content.Load<Texture2D>("enemy_attack");
-            enemy3 = content.Load<Texture2D>("standing");
-            startexture = content.Load<Texture2D>("star");
-            ghost = content.Load<Texture2D>("ghost");
+
+           
             this.hero = hero;
-
-            enemies.Add(new WalkingEnemy(enemy1, 8, 15, 48, 48, 160));
-
-            enemies.Add(new WalkingEnemy(enemy2, 5, 15, 96, 96, 160));
-            
-            
-            enemies.Add(new StandingEnemy(enemy3, 12, 23, 70, 70));
-
-
-            stars.Add(new Star(startexture, new Vector2(1200, 90)));
-            stars.Add(new Star(startexture, new Vector2(1300, 457)));
+            enemies.Add(new WalkingEnemy(axe, 8, 15, 48, 48, 160));
+            enemies.Add(new WalkingEnemy(goblin, 5, 15, 96, 96, 160));
+            enemies.Add(new StandingEnemy(trap, 12, 23, 70, 70));
+            stars.Add(new Star(star, new Vector2(1200, 90)));
+            stars.Add(new Star(star, new Vector2(1300, 457)));
 
             foreach (var item in enemies)
             {

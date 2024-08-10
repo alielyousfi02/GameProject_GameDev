@@ -1,4 +1,4 @@
-﻿using GameProject_GameDev.Levels.LevelBuilder;
+﻿using GameProject_GameDev.LevelBuilder;
 using GameProject_GameDev.Players;
 using GameProject_GameDev.Players.AntiHero;
 using GameProject_GameDev.StarMap;
@@ -17,10 +17,21 @@ namespace GameProject_GameDev.Levels
         internal List<Enemy> enemies;
         internal List<Star> stars;
         internal Hero hero;
+        internal Texture2D ghost, star, goblin, axe, trap;
         public Level(ContentManager content, Hero hero)
         {
             this.content = content;
             map = new Map();
+
+
+
+
+            axe = content.Load<Texture2D>("enemy_run");
+            goblin = content.Load<Texture2D>("enemy_attack");
+            ghost = content.Load<Texture2D>("ghost");
+            trap = content.Load<Texture2D>("standing");
+            star = content.Load<Texture2D>("star");
+
 
             enemies = new List<Enemy>();
             stars = new List<Star>();

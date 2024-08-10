@@ -6,32 +6,23 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GameProject_GameDev.Button
 {
-    internal class Button : IGameObject
+    internal abstract class Button : IGameObject
     {
-        private int width = 100;
-        private int height = 30;
+        private int height = 30, width = 100;
         private Vector2 position;
         protected Rectangle button;
         protected MouseState previousMouseState;
         protected Game1 game;
         protected GraphicsDevice graphicsDevice;
         protected ContentManager content;
+        protected Texture2D texture;
+        private SpriteFont font;
 
         private string text;
-        protected Texture2D texture;
-        SpriteFont font;
 
-        public int Width
-        {
-            get { return 1000; }
-        }
-        public int Height
-        {
-            get { return 300; }
-        }
-      
-       
+
         
+
         public Button(Game1 game, GraphicsDevice graphicsDevice, ContentManager content,  Vector2 position, string text)
         {
 
@@ -57,27 +48,30 @@ namespace GameProject_GameDev.Button
 
             spritebatch.DrawString(font, text, textPos, Color.Black);
         }
+        protected abstract void OnClick();
+
         public virtual void Update(GameTime gameTime)
         {
 
 
-
             MouseState currentMouseState = Mouse.GetState();
-
-
             Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
+
+            if (button.Contains(mousePosition) && currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed)
+            {
+                OnClick();
+            }
 
             if (button.Contains(mousePosition))
             {
-
-                texture.SetData(new[] { Color.LightBlue });               
+                texture.SetData(new[] { Color.LightBlue });
             }
             else
             {
                 texture.SetData(new[] { Color.White });
             }
-            previousMouseState = currentMouseState; 
 
+            previousMouseState = currentMouseState;
 
         }
 

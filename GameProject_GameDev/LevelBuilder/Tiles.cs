@@ -29,12 +29,12 @@ namespace GameProject_GameDev.LevelBuilder
             spriteBatch.Draw(texture, rectangle, Color.White);
         }
     }
-    class CollisionTiles: Tiles
+    class CollisionTiles : Tiles
     {
         public CollisionTiles(int i, Rectangle newRectangle)
         {
             texture = Content.Load<Texture2D>("Tile" + i);
-            this.Rectangle = newRectangle;
+            Rectangle = newRectangle;
         }
     }
 }

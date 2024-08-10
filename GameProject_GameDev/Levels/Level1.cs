@@ -1,4 +1,4 @@
-﻿using GameProject_GameDev.Levels.LevelBuilder;
+﻿using GameProject_GameDev.LevelBuilder;
 using GameProject_GameDev.Players;
 using GameProject_GameDev.Players.AntiHero;
 using GameProject_GameDev.StarMap;
@@ -15,28 +15,31 @@ namespace GameProject_GameDev.Levels
     {
 
         private Hero hero;
-        public StandingEnemy standingEnemy;
         public Level1(ContentManager content, Hero hero) : base(content, hero)
         {
-            Texture2D enemy1, enemy2, enemy3, startexture, ghost;
+            //Texture2D enemy1, enemy2, enemy3, startexture, ghost;
 
-            
-            enemy1 = content.Load<Texture2D>("enemy_run");
-            enemy2 = content.Load<Texture2D>("enemy_attack");
+            /*
+             
+              axe = content.Load<Texture2D>("enemy_run");
+            goblin = content.Load<Texture2D>("enemy_attack");
             ghost = content.Load<Texture2D>("ghost");
-            enemy3 = content.Load<Texture2D>("standing");
-            startexture = content.Load<Texture2D>("star");
+            trap = content.Load<Texture2D>("standing");
+            star = content.Load<Texture2D>("star");
+
+             */
+           
 
             this.hero = hero;
             enemies.Add(new GhostEnemy(ghost, 1, 1, 96, 96, 100, hero));
-            enemies.Add(new WalkingEnemy(enemy2, 8, 3, 96, 96, 60));
-            enemies.Add(new WalkingEnemy(enemy1, 12, 7, 48, 48, 150));
-            enemies.Add(new WalkingEnemy(enemy2, 4, 24, 96, 96, 120));
-            enemies.Add(new WalkingEnemy(enemy1, 1, 23, 48, 48, 100));
-            enemies.Add(new StandingEnemy(enemy3, 4, 5, 70, 70));
+            enemies.Add(new WalkingEnemy(goblin, 8, 3, 96, 96, 60));
+            enemies.Add(new WalkingEnemy(axe, 12, 7, 48, 48, 150));
+            enemies.Add(new WalkingEnemy(goblin, 4, 24, 96, 96, 120));
+            enemies.Add(new WalkingEnemy(axe, 1, 23, 48, 48, 100));
+            enemies.Add(new StandingEnemy(trap, 4, 5, 70, 70));
 
-            stars.Add(new Star(startexture, new Vector2(220, 30)));
-            stars.Add(new Star(startexture, new Vector2(1300, 601)));
+            stars.Add(new Star(star, new Vector2(220, 30)));
+            stars.Add(new Star(star, new Vector2(1300, 601)));
             foreach (var item in enemies)
             {
                 if (item is WalkingEnemy)

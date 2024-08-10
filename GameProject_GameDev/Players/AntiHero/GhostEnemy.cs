@@ -30,7 +30,7 @@ namespace GameProject_GameDev.Players.AntiHero
             this.hero = hero;
             animatie = new Animation(base.texture, dim, dim);
             srcRec = new Rectangle(0, 0, texture.Width, texture.Height);
-
+            base.Score = 1000;
             base.rectangle = new Rectangle((int)position.X, (int)position.Y, dim, dim);
         }
 
@@ -56,10 +56,6 @@ namespace GameProject_GameDev.Players.AntiHero
             if(IsAlive)
             spriteBatch.Draw(animatie.CurrentFrame.Texture, new Vector2(rectangle.X, rectangle.Y), animatie.CurrentFrame.SourceRectangle, Color.White);
 
-            Texture2D rectTexture = new Texture2D(spriteBatch.GraphicsDevice, HitBox.Width, HitBox.Height);
-            Color[] data = new Color[HitBox.Width * HitBox.Height];
-            for (int i = 0; i < data.Length; ++i) data[i] = Color.Red;
-            rectTexture.SetData(data);
 
         }
 

@@ -1,5 +1,5 @@
-﻿using GameProject_GameDev.Levels;
-using GameProject_GameDev.Levels.LevelBuilder;
+﻿using GameProject_GameDev.LevelBuilder;
+using GameProject_GameDev.Levels;
 using GameProject_GameDev.Players;
 using GameProject_GameDev.Players.AntiHero;
 using GameProject_GameDev.UI;

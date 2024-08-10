@@ -13,13 +13,17 @@ namespace GameProject_GameDev.StarMap
     {
         private Texture2D texture;
         private Vector2 position;
-        private bool IsCollected;
+        public bool IsCollected
+        {
+            get;private set;
+        }
         private Rectangle rectangle;
         private Rectangle srcRec;
         public Rectangle HitBox
         {
             get { return rectangle; }
         }
+
         public Star(Texture2D texture, Vector2 position)
         {
             this.texture = texture;

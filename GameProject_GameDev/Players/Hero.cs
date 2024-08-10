@@ -1,7 +1,8 @@
 ﻿using GameProject_GameDev.Animations;
 using GameProject_GameDev.Input;
 using GameProject_GameDev.Interfaces;
-using GameProject_GameDev.Levels.LevelBuilder;
+using GameProject_GameDev.LevelBuilder;
+
 using GameProject_GameDev.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -137,7 +138,6 @@ namespace GameProject_GameDev.Players
 
                 if (intersection.Width < intersection.Height)
                 {
-                    // Horizontale collisie checkere
                     if (adjustedRectangle.Center.X < newRectangle.Center.X)
                     {
                         position.X = newRectangle.Left - currentAnimation.CurrentFrame.NonTransparentBoundingBox.Width - currentAnimation.CurrentFrame.NonTransparentBoundingBox.X;

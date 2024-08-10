@@ -7,13 +7,13 @@ namespace GameProject_GameDev.Animations
 {
     internal class Animation
     {
-        public AnimationFrame CurrentFrame { get; private set; }
-
-        public List<AnimationFrame> frames;
         private int counter;
         private double secondCounter = 0;
         private Texture2D spritetexture;
 
+        public AnimationFrame CurrentFrame { get; private set; }
+        public List<AnimationFrame> frames;
+        
         public Animation(Texture2D texture, int widthSprite = 1, int heightSprite = 1)
         {
             spritetexture = texture;
@@ -56,7 +56,6 @@ namespace GameProject_GameDev.Animations
         public void Update(GameTime gameTime)
         {
             if (frames.Count == 0) return; 
-            //Debug.WriteLine(frames[counter].SourceRectangle.Width + " " + frames[counter].SourceRectangle.Height + " -> " + frames[counter].NonTransparentBoundingBox.Width + " " + frames[counter].NonTransparentBoundingBox.Height);
             secondCounter += gameTime.ElapsedGameTime.TotalSeconds;
             int fps = 10;
             if (secondCounter >= 1d / fps)

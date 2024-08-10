@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/background.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/beachbackground.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Dead.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/enemy_attack.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/enemy_run.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/gameover.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/ghost.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/HERO.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Hero/Attack_3.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Hero/Idle.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Hero/Jump.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Hero/Run.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/HERO2.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/standing.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/star.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Text.spritefont</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Tile1.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Tile2.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/Walk.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/WhiteText.spritefont</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/won.png</File>
+    <File>C:/Users/ali_e/Desktop/GameProject_GameDev/GameProject_GameDev/Content/youwoun.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
